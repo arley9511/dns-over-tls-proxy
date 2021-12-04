@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: dns-over-tls-handler
+  labels:
+    name: dns-over-tls-handler
+spec:
+  selector:
+    matchLabels:
+      name: dns-over-tls-handler
+  template:
+    metadata:
+      labels:
+        name: dns-over-tls-handler
+    spec:
+      hostNetwork: true
+      containers:
+      - name: dns-over-tls-handler
+        image: container-registry/dns-over-tls-handler
+        resources:
+          limits:
+            cpu: 100m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 300Mi
+        env:
+        - name: DOT_SERVER
+          value: "1.1.1.1"
+        ports:
+        - name: tcp-dns
+          containerPort: 53
+          hostPort: 53
+        - name: udp-dns
+          containerPort: 53
+          hostPort: 53
+          protocol: UDP
